@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet{
-    private static final String CORRECT_USERNAME = "admin@test.com";
+    private static final String CORRECT_USERNAME = "admin";
     private static final String CORRECT_PASSWORD = "123";
 
     @Override
@@ -17,14 +17,9 @@ public class LoginServlet extends HttpServlet{
         String password = request.getParameter("password");
 
         if (CORRECT_USERNAME.equals(username) && CORRECT_PASSWORD.equals(password)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("username", username);
-
-            // 
-
-            //response.sendRedirect("profile");
+            response.getWriter().write("success");
         } else {
-            response.getWriter().write("Invalid username or password");
+            response.getWriter().write("failure");
         }
     }
 }
