@@ -14,21 +14,29 @@ public class MainScreen extends Application {
     private BorderPane mainLayout;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
+        // Start the WebServer in a separate thread
+        Thread webServerThread = new Thread(() -> {
+            try {
+                WebServer.main(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        webServerThread.setDaemon(true); // Stops the thread when the JavaFX app exits
+        webServerThread.start();
+
         // Create the main layout
         mainLayout = new BorderPane();
-        // Set the title of the Stage
-        stage.setTitle("Hello Application");
+        stage.setTitle("Login Application");
 
         // Set the initial screen content (e.g., Login screen)
         mainLayout.setCenter(LoginScreen.getScreen(this));
 
         // Create and display the scene
         Scene scene = new Scene(mainLayout, 1000, 800);
-        stage.setTitle("Hello Application");
         stage.setScene(scene);
         stage.show();
-
     }
     public static void main(String[] args) {
         launch();

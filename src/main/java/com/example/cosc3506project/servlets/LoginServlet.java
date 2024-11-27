@@ -7,6 +7,8 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet{
+    private static final String CORRECT_USERNAME = "admin@test.com";
+    private static final String CORRECT_PASSWORD = "123";
 
     @Override
     protected  void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -14,9 +16,13 @@ public class LoginServlet extends HttpServlet{
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if ("admin".equals(username) && "password".equals(password)) {
+        if (CORRECT_USERNAME.equals(username) && CORRECT_PASSWORD.equals(password)) {
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
+
+            // 
+
+            //response.sendRedirect("profile");
         } else {
             response.getWriter().write("Invalid username or password");
         }
