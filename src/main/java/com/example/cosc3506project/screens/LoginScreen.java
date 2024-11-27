@@ -38,7 +38,15 @@ public class LoginScreen {
                 String result = sendLogin(userInput, passInput);
                 if ("success".equals(result)) {
                     resultLabel.setText("Login Successful!");
-                } else if ("failure".equals(result)) { // Handle specific failure response
+
+                    app.setScreen(new ProjectManagementSystem().getAdminScreen());
+
+                } else if ("user".equals(result)) {
+                    resultLabel.setText("Login Successful!");
+
+                    app.setScreen(new ProjectManagementSystem().getAdminScreen());
+                }
+                else if ("failure".equals(result)) { // Handle specific failure response
                     resultLabel.setText("Login failed. Please check your credentials.");
                 } else {
                     resultLabel.setText("Unexpected response: " + result);
