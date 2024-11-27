@@ -1,5 +1,6 @@
 package com.example.cosc3506project;
 
+import com.example.cosc3506project.screens.LoginScreen;
 import javafx.application.Application;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -20,7 +21,7 @@ public class MainScreen extends Application {
         stage.setTitle("Hello Application");
 
         // Set the initial screen content (e.g., Login screen)
-        mainLayout.setCenter(new Label("Welcome to the Main Screen!"));
+        mainLayout.setCenter(LoginScreen.getScreen(this));
 
         // Create and display the scene
         Scene scene = new Scene(mainLayout, 1000, 800);

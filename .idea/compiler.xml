@@ -9,8 +9,5 @@
         <module name="COSC3506Project" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="COSC3506Project" target="0" />
-    </bytecodeTargetLevel>
   </component>
 </project>
