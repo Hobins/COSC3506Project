@@ -46,8 +46,10 @@ public class LoginScreen {
         });
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(companyLabel, usernameLabel, usernameField, passwordLabel, passwordField, forgotPassword, loginButton, createAcc, resultLabel);
-        layout.setPadding(new Insets(100, 200, 200, 200));
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(loginButton, createAcc);
+        layout.getChildren().addAll(companyLabel, usernameLabel, usernameField, passwordLabel, passwordField, forgotPassword, buttons, resultLabel);
+        layout.setPadding(new Insets(200, 200, 200, 200));
         return layout;
     }
 }
