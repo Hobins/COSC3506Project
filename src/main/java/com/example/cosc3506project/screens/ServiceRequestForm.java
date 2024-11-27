@@ -90,6 +90,9 @@ public class ServiceRequestForm  {
             descriptionField.clear();
         });
 
+        root.setLeft(leftPanel);
+        root.setCenter(formPanel);
+
         return root;
     }
 
