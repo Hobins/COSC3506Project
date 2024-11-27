@@ -9,6 +9,7 @@ module com.example.cosc3506project {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires jetty.servlet.api;
 
     opens com.example.cosc3506project to javafx.fxml;
     exports com.example.cosc3506project;
