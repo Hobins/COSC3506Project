@@ -35,5 +35,15 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:11.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:11.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:11.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:11.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:11.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:11.0.12" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.servlet:jakarta.servlet-api:5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20210307" level="project" />
   </component>
 </module>
