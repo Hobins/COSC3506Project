@@ -31,7 +31,7 @@ public class ServiceRequestForm  {
 
         Label userLabel = new Label("Users");
         ListView<String> userMenu = new ListView<>();
-        userMenu.getItems().addAll("Dashboard", "Request Services", "Track Progress", "Payment History", "Edit Profile");
+        userMenu.getItems().addAll("Payment History", "Edit Profile");
 
         Label mainLabel = new Label("Main");
         ListView<String> mainMenu = new ListView<>();
@@ -43,12 +43,6 @@ public class ServiceRequestForm  {
             String selectedItem = userMenu.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 switch (selectedItem) {
-                    case "Request Services":
-                        showRequestServicesScreen();
-                        break;
-                    case "Track Progress":
-                        showTrackProgressScreen();
-                        break;
                     case "Payment History":
                         showPaymentHistoryScreen();
                         break;
@@ -97,17 +91,6 @@ public class ServiceRequestForm  {
         trackProgressPanel.getChildren().add(trackProgressTitle);
 
         root.setCenter(trackProgressPanel);
-    }
-
-    private void showRequestServicesScreen() {
-        VBox requestServicesPanel = new VBox(10);
-        requestServicesPanel.setPadding(new Insets(20));
-        Label requestServicesTitle = new Label("Request Services");
-        requestServicesTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        requestServicesPanel.getChildren().add(requestServicesTitle);
-
-        root.setCenter(requestServicesPanel);
-
     }
 
     private void showPaymentHistoryScreen() {
@@ -330,7 +313,38 @@ public class ServiceRequestForm  {
         serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         serviceHistoryPanel.getChildren().add(serviceHistoryTitle);
 
+        TableView<Services> serviceHistoryTable = new TableView<>();
+
+        TableColumn<Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
+        serviceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
+
+        TableColumn<Services, String> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<Services, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<Services, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        serviceHistoryTable.getColumns().addAll(serviceTypeColumn, dateColumn, descriptionColumn, statusColumn);
+
+        serviceHistoryPanel.getChildren().add(serviceHistoryTable);
+
+        serviceHistoryTable.setItems(getServiceHistory());
+
+
         root.setCenter(serviceHistoryPanel);
+    }
+
+    // Sample data
+    private ObservableList<Services> getServiceHistory() {
+        return FXCollections.observableArrayList(
+                new Services("Plumbing", "2024-11-20", "Added new pipes", "Completed"),
+                new Services("Electrical", "2024-11-15", "Replace kitchen light.", "Canceled"),
+                new Services("Cleaning", "2024-11-10", "Cleaned the house", "Completed")
+
+        );
     }
 
     // Payment class
@@ -373,6 +387,38 @@ public class ServiceRequestForm  {
 
         public String getPaymentMethod() {
             return paymentMethod;
+        }
+    }
+
+    // Services class
+    public static class Services {
+        private String serviceType;
+        private String date;
+        private String description;
+        private String status;
+
+        public Services(String serviceType, String date, String description, String status) {
+            this.serviceType = serviceType;
+            this.status = status;
+            this.date = date;
+            this.description = description;
+        }
+
+
+        public String getServiceType() {
+            return serviceType;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public String getDescription() {
+            return description;
         }
     }
 
