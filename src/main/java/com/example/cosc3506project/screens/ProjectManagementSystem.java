@@ -1,37 +1,101 @@
 package com.example.cosc3506project.screens;
-// admin page code
+
+import com.example.cosc3506project.MainScreen;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.util.Callback;
 
 public class ProjectManagementSystem {
 
-    public BorderPane getAdminScreen() {
+    BorderPane root = new BorderPane();  // Root layout for the screen
+    VBox leftPanel = new VBox(10);  // The left panel menu
 
-        // Main layout
-        BorderPane root = new BorderPane();
+    // Constructor to initialize the left panel
+    public ProjectManagementSystem() {
+        setupLeftPanel();
+    }
 
+    // Setup the left panel once
+    private void setupLeftPanel() {
         // Left panel (Admin menu)
-        VBox leftPanel = new VBox(10);
         leftPanel.setPadding(new Insets(10));
         leftPanel.setPrefWidth(200);
         leftPanel.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px;");
 
         Label adminLabel = new Label("Administrator");
         ListView<String> adminMenu = new ListView<>();
-        adminMenu.getItems().addAll("Dashboard", "Manage Users", "Edit/Delete Users", "User Roles", "Assign Permissions", "Financials");
+        adminMenu.getItems().addAll("Dashboard", "Manage Users", "User Roles", "Assign Permissions", "Financials");
+
+        adminMenu.setOnMouseClicked(e -> {
+            String selectedItem = adminMenu.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                switch (selectedItem) {
+                    case "Manage Users":
+                        showManageUsersScreen();
+                        break;
+                    case "User Roles":
+                        showUserRolesScreen();
+                        break;
+                    case "Assign Permissions":
+                        showAssignPermissionsScreen();
+                        break;
+                    case "Financials":
+                        showFinancialsScreen();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         leftPanel.getChildren().addAll(adminLabel, adminMenu);
+    }
 
-        // Center panel (Edit/Delete Users)
+
+    public BorderPane getAdminScreen(MainScreen app) {
+        root.setLeft(leftPanel);
+
+        showManageUsersScreen();
+
+        return root;
+    }
+
+    public void showUserRolesScreen() {
+        VBox userRoles = new VBox(10);
+        userRoles.setPadding(new Insets(20));
+        Label title = new Label("User Roles");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        userRoles.getChildren().add(title);
+
+        root.setCenter(userRoles);
+    }
+
+    public void showAssignPermissionsScreen() {
+        VBox assignPermissions = new VBox(10);
+        assignPermissions.setPadding(new Insets(20));
+        Label title = new Label("Assign Permissions");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        assignPermissions.getChildren().add(title);
+
+        root.setCenter(assignPermissions);
+    }
+
+    public void showFinancialsScreen() {
+        VBox financials = new VBox(10);
+        financials.setPadding(new Insets(20));
+        Label title = new Label("Financials");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        financials.getChildren().add(title);
+
+        root.setCenter(financials);
+    }
+
+    private void showManageUsersScreen() {
         VBox centerPanel = new VBox(10);
         centerPanel.setPadding(new Insets(20));
         centerPanel.setAlignment(Pos.TOP_LEFT);
@@ -98,12 +162,7 @@ public class ProjectManagementSystem {
 
         centerPanel.getChildren().addAll(centerTitle, table);
 
-        // Add panels to root layout
-        root.setLeft(leftPanel);
         root.setCenter(centerPanel);
-
-        return root;
-
     }
 
     // User class
@@ -143,3 +202,6 @@ public class ProjectManagementSystem {
         }
     }
 }
+
+
+

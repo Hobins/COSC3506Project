@@ -39,7 +39,7 @@ public class LoginScreen {
                 if ("success".equals(result)) {
                     resultLabel.setText("Login Successful!");
 
-                    app.setScreen(new ProjectManagementSystem().getAdminScreen());
+                    app.setScreen(new ProjectManagementSystem().getAdminScreen(app));
 
                 } else if ("user".equals(result)) {
                     resultLabel.setText("Login Successful!");
