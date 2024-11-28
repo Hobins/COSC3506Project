@@ -4,18 +4,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 
 public class ServiceRequestForm  {
+
+    private ProjectManagementSystem.User currentUser;
 
     BorderPane root = new BorderPane();  // Root layout for the screen
     VBox leftPanel = new VBox(10);  // The left panel menu
 
     public ServiceRequestForm() {
+        this.currentUser = new ProjectManagementSystem.User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca");
         setupLeftPanel();
     }
 
@@ -27,7 +31,7 @@ public class ServiceRequestForm  {
 
         Label userLabel = new Label("Users");
         ListView<String> userMenu = new ListView<>();
-        userMenu.getItems().addAll("Dashboard", "Request Services", "Track Progress", "Payment History", "Edit Profiles");
+        userMenu.getItems().addAll("Dashboard", "Request Services", "Track Progress", "Payment History", "Edit Profile");
 
         Label mainLabel = new Label("Main");
         ListView<String> mainMenu = new ListView<>();
@@ -48,7 +52,7 @@ public class ServiceRequestForm  {
                     case "Payment History":
                         showPaymentHistoryScreen();
                         break;
-                    case "Edit Profiles":
+                    case "Edit Profile":
                         showEditProfilesScreen();
                         break;
                     default:
@@ -153,16 +157,82 @@ public class ServiceRequestForm  {
 
         // Add components to the root layout
 
-
         root.setCenter(managePaymentsPanel);
     }
 
     private void showEditProfilesScreen() {
+        AtomicReference<String> age = new AtomicReference<>("0");
+        AtomicReference<String> location = new AtomicReference<>("N/A");
+
         VBox editProfilesPanel = new VBox(10);
         editProfilesPanel.setPadding(new Insets(20));
-        Label editProfilesTitle = new Label("Edit Profiles");
+
+        Label editProfilesTitle = new Label("Edit Profile");
         editProfilesTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
         editProfilesPanel.getChildren().add(editProfilesTitle);
+
+        Label usernameLabel = new Label("Username: " + currentUser.getAccount());
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Enter new username");
+
+        Label phoneLabel = new Label("Phone Number: " + currentUser.getContact());
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Enter new phone number");
+
+        Label emailLabel = new Label("Email: " + currentUser.getEmail());
+        TextField emailField = new TextField();
+        emailField.setPromptText("Enter new email");
+
+        Label ageLabel = new Label("Age: " + age);
+        TextField ageField = new TextField();
+        ageField.setPromptText("Enter new age");
+        HBox ageBox = new HBox(10);
+        editProfilesPanel.getChildren().add(ageBox);
+
+        Label locationLabel = new Label("Location: " + location);
+        TextField locationField = new TextField();
+        locationField.setPromptText("Enter new location");
+        HBox locationBox = new HBox(10);
+        editProfilesPanel.getChildren().add(locationBox);
+
+        Button saveButton = new Button("Save");
+        try{
+            saveButton.setOnAction(e -> {
+                String newUsername = usernameField.getText();
+                String newPhone = phoneField.getText();
+                String newEmail = emailField.getText();
+                String newAge = ageField.getText();
+                String newLocation = locationField.getText();
+
+                if (!newUsername.isEmpty()) {
+                    currentUser.setAccount(newUsername);
+                }
+                if (!newPhone.isEmpty()) {
+                    currentUser.setContact(newPhone);
+                }
+                if (!newEmail.isEmpty()) {
+                    currentUser.setEmail(newEmail);
+                }
+                if (!newAge.isEmpty()) {
+                    age.set(newAge);
+                }
+                if (!newLocation.isEmpty()) {
+                    location.set(newLocation);
+                }
+
+                usernameLabel.setText("Username: " + currentUser.getAccount());
+                phoneLabel.setText("Phone Number: " + currentUser.getContact());
+                emailLabel.setText("Email: " + currentUser.getEmail());
+//                ageLabel.setText("Age: " + age);
+//                locationLabel.setText("Location: " + location);
+            });
+        }
+        catch(Exception e){
+            System.out.println("Error: " + e);
+        }
+
+        editProfilesPanel.getChildren().addAll(usernameLabel, usernameField, phoneLabel, phoneField, emailLabel, emailField, ageLabel, ageField, locationLabel, locationField, saveButton);
 
         root.setCenter(editProfilesPanel);
     }
