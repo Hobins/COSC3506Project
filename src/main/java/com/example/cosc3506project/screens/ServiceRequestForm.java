@@ -1,5 +1,7 @@
 package com.example.cosc3506project.screens;
 
+import com.example.cosc3506project.servlets.ServiceHistoryServlet;
+import com.example.cosc3506project.servlets.ServiceStatusServlet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -7,7 +9,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -293,31 +301,66 @@ public class ServiceRequestForm  {
         serviceStatusTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         serviceStatusPanel.getChildren().add(serviceStatusTitle);
 
-        TableView<Services> serviceStatusTable = new TableView<>();
+        TableView<ServiceStatusServlet.Services> serviceStatusTable = new TableView<>();
 
-        TableColumn<Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
+        TableColumn<ServiceStatusServlet.Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
         serviceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
 
-        TableColumn<Services, String> dateColumn = new TableColumn<>("Date");
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        TableColumn<Services, String> descriptionColumn = new TableColumn<>("Description");
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        TableColumn<Services, String> statusColumn = new TableColumn<>("Status");
+        TableColumn<ServiceStatusServlet.Services, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        serviceStatusTable.getColumns().addAll(serviceTypeColumn, dateColumn, descriptionColumn, statusColumn);
+        serviceStatusTable.getColumns().addAll(serviceTypeColumn, statusColumn);
 
         serviceStatusPanel.getChildren().add(serviceStatusTable);
 
-        serviceStatusTable.setItems(FXCollections.observableArrayList(
-                new Services("Service 1", "01/01/2021", "Description 1", "Pending"),
-                new Services("Service 2", "02/02/2021", "Description 2", "Pending"),
-                new Services("Service 3", "03/03/2021", "Description 3", "Pending")
-        ));
+        serviceStatusTable.setItems(getDataFromServiceStatusServlet());
 
         root.setCenter(serviceStatusPanel);
+    }
+
+    private ObservableList<ServiceStatusServlet.Services> getDataFromServiceStatusServlet() {
+        ObservableList<ServiceStatusServlet.Services> data = FXCollections.observableArrayList();
+
+        try {
+            URL url = new URL("http://localhost:8081/service-status");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException("Failed: HTTP error code: " + connection.getResponseCode());
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+
+                // Parse the JSON array from the response
+                JSONArray jsonArray = new JSONArray(responseBuilder.toString());
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String serviceType = jsonObject.getString("serviceType");
+                    String status = jsonObject.getString("status");
+
+                    // Add the parsed object to the data list
+                    data.add(new ServiceStatusServlet.Services(serviceType, status));
+                }
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return data;
     }
 
     private void showServiceHistoryScreen() {
@@ -327,32 +370,74 @@ public class ServiceRequestForm  {
         serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         serviceHistoryPanel.getChildren().add(serviceHistoryTitle);
 
-        TableView<Services> serviceHistoryTable = new TableView<>();
+        TableView<ServiceHistoryServlet.Services> serviceHistoryTable = new TableView<>();
 
-        TableColumn<Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
+        TableColumn<ServiceHistoryServlet.Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
         serviceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
 
-        TableColumn<Services, String> dateColumn = new TableColumn<>("Date");
+        TableColumn<ServiceHistoryServlet.Services, String> dateColumn = new TableColumn<>("Date");
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        TableColumn<Services, String> descriptionColumn = new TableColumn<>("Description");
+        TableColumn<ServiceHistoryServlet.Services, String> descriptionColumn = new TableColumn<>("Description");
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        TableColumn<Services, String> statusColumn = new TableColumn<>("Status");
+        TableColumn<ServiceHistoryServlet.Services, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         serviceHistoryTable.getColumns().addAll(serviceTypeColumn, dateColumn, descriptionColumn, statusColumn);
 
         serviceHistoryPanel.getChildren().add(serviceHistoryTable);
 
-        serviceHistoryTable.setItems(FXCollections.observableArrayList(
-                new Services("Plumbing", "01/01/2021", "Added new pipes", "Completed"),
-                new Services("Electrical", "02/02/2021", "Updated all the house wiring", "Completed"),
-                new Services("House addition", "03/03/2021", "Constructing an addition for the household", "Canceled")
-        ));
+        serviceHistoryTable.setItems(getDataFromServiceHistoryServlet());
 
 
         root.setCenter(serviceHistoryPanel);
+    }
+
+    private ObservableList<ServiceHistoryServlet.Services> getDataFromServiceHistoryServlet() {
+        ObservableList<ServiceHistoryServlet.Services> data = FXCollections.observableArrayList();
+
+        try {
+            URL url = new URL("http://localhost:8081/service-history");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException("Failed: HTTP error code: " + connection.getResponseCode());
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+
+                // Parse the JSON array from the response
+                JSONArray jsonArray = new JSONArray(responseBuilder.toString());
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String serviceType = jsonObject.getString("serviceType");
+                    String date = jsonObject.getString("date");
+                    String description = jsonObject.getString("description");
+                    String status = jsonObject.getString("status");
+
+                    // Add the parsed object to the data list
+                    data.add(new ServiceHistoryServlet.Services(serviceType, date, description, status));
+                }
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return data;
     }
 
 
@@ -401,36 +486,5 @@ public class ServiceRequestForm  {
         }
     }
 
-    // Services class
-    public static class Services {
-        private String serviceType;
-        private String date;
-        private String description;
-        private String status;
-
-        public Services(String serviceType, String date, String description, String status) {
-            this.serviceType = serviceType;
-            this.status = status;
-            this.date = date;
-            this.description = description;
-        }
-
-
-        public String getServiceType() {
-            return serviceType;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
 
 }

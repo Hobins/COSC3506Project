@@ -1,7 +1,10 @@
 package com.example.cosc3506project.screens;
 
 
+import com.example.cosc3506project.servlets.ActiveProjectServlet;
+import com.example.cosc3506project.servlets.ServiceHistoryServlet;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,6 +13,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ContractorPage {
 
@@ -229,36 +239,77 @@ public class ContractorPage {
     private void showActiveProjectsScreen() {
         VBox activeProjectsPanel = new VBox(10);
         activeProjectsPanel.setPadding(new Insets(20));
-        Label serviceHistoryTitle = new Label("Active Projects");
-        serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        activeProjectsPanel.getChildren().add(serviceHistoryTitle);
+        Label activePojectTitla = new Label("Active Projects");
+        activePojectTitla.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        activeProjectsPanel.getChildren().add(activePojectTitla);
 
-        TableView<ServiceRequestForm.Services> projectsTable = new TableView<>();
+        TableView<ActiveProjectServlet.Services> projectsTable = new TableView<>();
 
-        TableColumn<ServiceRequestForm.Services, String> serviceTypeCol = new TableColumn<>("Service Type");
+        TableColumn<ActiveProjectServlet.Services, String> serviceTypeCol = new TableColumn<>("Service Type");
         serviceTypeCol.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
 
-        TableColumn<ServiceRequestForm.Services, String> dateCol = new TableColumn<>("Date Requested");
+        TableColumn<ActiveProjectServlet.Services, String> dateCol = new TableColumn<>("Date Requested");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        TableColumn<ServiceRequestForm.Services, String> descriptionCol = new TableColumn<>("Description");
+        TableColumn<ActiveProjectServlet.Services, String> descriptionCol = new TableColumn<>("Description");
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        TableColumn<ServiceRequestForm.Services, String> statusCol = new TableColumn<>("Status");
+        TableColumn<ActiveProjectServlet.Services, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         projectsTable.getColumns().addAll(serviceTypeCol, dateCol, descriptionCol, statusCol);
 
         activeProjectsPanel.getChildren().add(projectsTable);
 
-        projectsTable.setItems(FXCollections.observableArrayList(
-                new ServiceRequestForm.Services("Plumbing", "09/06/2024", "Requested plumbing to be laid", "Approved"),
-                new ServiceRequestForm.Services("Electrical", "10/03/2024", "Requested new wiring throughout property", "Approved"),
-                new ServiceRequestForm.Services("House addition", "11/16/2024", "Requested house addition to be constructed", "Waiting for Approval"),
-                new ServiceRequestForm.Services("Housing Unit", "11/22/2024", "Requested construction of property", "Waiting for Approval")
-        ));
+        projectsTable.setItems(getDataFromActiveProjectServlet());
 
         root.setCenter(activeProjectsPanel);
+    }
+
+    private ObservableList<ActiveProjectServlet.Services> getDataFromActiveProjectServlet() {
+        ObservableList<ActiveProjectServlet.Services> data = FXCollections.observableArrayList();
+
+        try {
+            URL url = new URL("http://localhost:8081/active-project");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException("Failed: HTTP error code: " + connection.getResponseCode());
+            }
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+
+                // Parse the JSON array from the response
+                JSONArray jsonArray = new JSONArray(responseBuilder.toString());
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String serviceType = jsonObject.getString("serviceType");
+                    String date = jsonObject.getString("date");
+                    String description = jsonObject.getString("description");
+                    String status = jsonObject.getString("status");
+
+                    // Add the parsed object to the data list
+                    data.add(new ActiveProjectServlet.Services(serviceType, date, description, status));
+                }
+            }
+
+            connection.disconnect();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        return data;
     }
 
 
