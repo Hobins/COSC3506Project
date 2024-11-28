@@ -1,9 +1,11 @@
 package com.example.cosc3506project.screens;
 
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -221,9 +223,42 @@ public class ContractorPage {
     }
 
     private void showEditScreen() {
+
     }
 
     private void showActiveProjectsScreen() {
+        VBox serviceHistoryPanel = new VBox(10);
+        serviceHistoryPanel.setPadding(new Insets(20));
+        Label serviceHistoryTitle = new Label("Active Projects");
+        serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        serviceHistoryPanel.getChildren().add(serviceHistoryTitle);
+
+        TableView<ServiceRequestForm.Services> projectsTable = new TableView<>();
+
+        TableColumn<ServiceRequestForm.Services, String> serviceTypeCol = new TableColumn<>("Service Type");
+        serviceTypeCol.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
+
+        TableColumn<ServiceRequestForm.Services, String> dateCol = new TableColumn<>("Date Requested");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<ServiceRequestForm.Services, String> descriptionCol = new TableColumn<>("Description");
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<ServiceRequestForm.Services, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        projectsTable.getColumns().addAll(serviceTypeCol, dateCol, descriptionCol, statusCol);
+
+        serviceHistoryPanel.getChildren().add(projectsTable);
+
+        projectsTable.setItems(FXCollections.observableArrayList(
+                new ServiceRequestForm.Services("Plumbing", "09/06/2024", "Requested plumbing to be laid", "Approved"),
+                new ServiceRequestForm.Services("Electrical", "10/03/2024", "Requested new wiring throughout property", "Approved"),
+                new ServiceRequestForm.Services("House addition", "11/16/2024", "Requested house addition to be constructed", "Waiting for Approval"),
+                new ServiceRequestForm.Services("Housing Unit", "11/22/2024", "Requested construction of property", "Waiting for Approval")
+        ));
+
+        root.setCenter(serviceHistoryPanel);
     }
 
 

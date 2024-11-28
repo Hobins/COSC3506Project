@@ -1,6 +1,6 @@
 package com.example.cosc3506project.screens;
 
-import com.example.cosc3506project.MainScreen;
+//import com.example.cosc3506project.MainScreen;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -148,7 +148,6 @@ public class ProjectManagementSystem {
 
         actionCol.setCellFactory(param -> new TableCell<>() {
             private final Button updateButton = new Button("Update");
-
             {
                 updateButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
