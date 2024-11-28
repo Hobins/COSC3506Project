@@ -247,6 +247,15 @@ public class ProjectManagementSystem {
             type.setEditable(true);
         }
 
+        public User(String userId, String account, String contact, String status, String email) {
+            this.userId = userId;
+            this.account = account;
+            this.contact = contact;
+            this.status = status;
+            this.email = email;
+
+        }
+
         public String getUserId() {
             return userId;
         }
@@ -265,6 +274,18 @@ public class ProjectManagementSystem {
 
         public String getEmail() {
             return email;
+        }
+
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public void setContact(String contact) {
+            this.contact = contact;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
         }
 
         public ComboBox getType() {
