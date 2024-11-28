@@ -33,15 +33,26 @@ public class LoginScreen {
             String userInput = usernameField.getText();
             String passInput = passwordField.getText();
 
+
             try {
                 String result = sendLogin(userInput, passInput);
                 if ("success".equals(result)) {
                     resultLabel.setText("Login Successful!");
-                } else {
+
+                    app.setScreen(new ProjectManagementSystem().getAdminScreen());
+
+                } else if ("user".equals(result)) {
+                    resultLabel.setText("Login Successful!");
+
+                    app.setScreen(new ServiceRequestForm().getUserScreen());
+                }
+                else if ("failure".equals(result)) { // Handle specific failure response
                     resultLabel.setText("Login failed. Please check your credentials.");
+                } else {
+                    resultLabel.setText("Unexpected response: " + result);
                 }
             } catch (Exception ex) {
-                resultLabel.setText("Login failed. Please check your credentials.");
+                resultLabel.setText("Error connecting to server.");
                 ex.printStackTrace();
             }
         });

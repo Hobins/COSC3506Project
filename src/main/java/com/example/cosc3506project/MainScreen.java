@@ -28,7 +28,7 @@ public class MainScreen extends Application {
 
         // Create the main layout
         mainLayout = new BorderPane();
-        stage.setTitle("Login Application");
+        stage.setTitle("Construction Project Management System");
 
         // Set the initial screen content (e.g., Login screen)
         mainLayout.setCenter(LoginScreen.getScreen(this));
@@ -38,6 +38,13 @@ public class MainScreen extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void setScreen(javafx.scene.Node newScreen) {
+        mainLayout.setCenter(newScreen);
+    }
+
+
+
     public static void main(String[] args) {
         launch();
     }
