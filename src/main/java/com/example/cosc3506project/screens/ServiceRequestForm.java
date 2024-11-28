@@ -1,9 +1,12 @@
 package com.example.cosc3506project.screens;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
 
@@ -24,7 +27,7 @@ public class ServiceRequestForm  {
 
         Label userLabel = new Label("Users");
         ListView<String> userMenu = new ListView<>();
-        userMenu.getItems().addAll("Dashboard", "Request Services", "Track Progress", "Manage Payments", "Edit Profiles");
+        userMenu.getItems().addAll("Dashboard", "Request Services", "Track Progress", "Payment History", "Edit Profiles");
 
         Label mainLabel = new Label("Main");
         ListView<String> mainMenu = new ListView<>();
@@ -42,8 +45,8 @@ public class ServiceRequestForm  {
                     case "Track Progress":
                         showTrackProgressScreen();
                         break;
-                    case "Manage Payments":
-                        showManagePaymentsScreen();
+                    case "Payment History":
+                        showPaymentHistoryScreen();
                         break;
                     case "Edit Profiles":
                         showEditProfilesScreen();
@@ -95,12 +98,61 @@ public class ServiceRequestForm  {
 
     }
 
-    private void showManagePaymentsScreen() {
+    private void showPaymentHistoryScreen() {
+
         VBox managePaymentsPanel = new VBox(10);
         managePaymentsPanel.setPadding(new Insets(20));
-        Label managePaymentsTitle = new Label("Manage Payments");
+        Label managePaymentsTitle = new Label("Payment History");
+        managePaymentsPanel.setAlignment(Pos.TOP_CENTER);
         managePaymentsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        managePaymentsPanel.getChildren().add(managePaymentsTitle);
+
+        TableView<Payment> table = new TableView<>();
+        table.setEditable(false);
+
+        TableColumn<Payment, String> invoiceCol = new TableColumn<>("Invoice#");
+        invoiceCol.setMinWidth(100);
+        invoiceCol.setCellValueFactory(new PropertyValueFactory<>("invoice"));
+
+        TableColumn<Payment, String> dateSentCol = new TableColumn<>("Date Sent");
+        dateSentCol.setMinWidth(100);
+        dateSentCol.setCellValueFactory(new PropertyValueFactory<>("dateSent"));
+
+        TableColumn<Payment, String> datePaidCol = new TableColumn<>("Date Paid");
+        datePaidCol.setMinWidth(100);
+        datePaidCol.setCellValueFactory(new PropertyValueFactory<>("datePaid"));
+
+        TableColumn<Payment, String> accountCol = new TableColumn<>("Account");
+        accountCol.setMinWidth(100);
+        accountCol.setCellValueFactory(new PropertyValueFactory<>("account"));
+
+        TableColumn<Payment, String> amountCol = new TableColumn<>("Amount");
+        amountCol.setMinWidth(100);
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+
+        TableColumn<Payment, String> paymentMethodCol = new TableColumn<>("Payment Method");
+        paymentMethodCol.setMinWidth(150);
+        paymentMethodCol.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
+
+        table.getColumns().addAll(invoiceCol, dateSentCol, datePaidCol, accountCol, amountCol, paymentMethodCol);
+
+        // Sample data
+        ObservableList<Payment> data = FXCollections.observableArrayList(
+                new Payment("572803", "2024-10-11", "2024-10-14", "John", "$100.00", "VISA"),
+                new Payment("576322", "2024-05-03", "2024-05-11", "Bill", "$1000.00", "PAYPAL"),
+                new Payment("583027", "2024-08-23", "2024-08-24", "Peter", "$350.00", "MASTERCARD"),
+                new Payment("097425", "2024-01-30", "2024-02-05", "Bobby", "$487.54", "VISA"),
+                new Payment("412032", "2024-07-15", "2024-07-19", "Mike", "$230.00", "PAYPAL"),
+                new Payment("384612", "2024-06-27", "2024-07-03", "Bill", "$12000.00", "VISA"),
+                new Payment("601723", "2024-02-05", "2024-02-11", "Max", "$500.00", "MASTERCARD"),
+                new Payment("875294", "2024-03-17", "2024-03-21", "Bill", "$740.42", "VISA")
+        );
+
+        table.setItems(data);
+
+        managePaymentsPanel.getChildren().addAll(managePaymentsTitle, table);
+
+        // Add components to the root layout
+
 
         root.setCenter(managePaymentsPanel);
     }
@@ -207,6 +259,50 @@ public class ServiceRequestForm  {
         root.setLeft(leftPanel);
 
         return root;
+    }
+
+
+    // Payment class
+    public static class Payment {
+        private String invoice;
+        private String dateSent;
+        private String datePaid;
+        private String account;
+        private String amount;
+        private String paymentMethod;
+
+        public Payment(String invoice, String dateSent, String datePaid, String account, String amount, String paymentMethod) {
+            this.invoice = invoice;
+            this.dateSent = dateSent;
+            this.datePaid = datePaid;
+            this.account = account;
+            this.amount = amount;
+            this.paymentMethod = paymentMethod;
+        }
+
+        public String getInvoice() {
+            return invoice;
+        }
+
+        public String getDateSent() {
+            return dateSent;
+        }
+
+        public String getDatePaid() {
+            return datePaid;
+        }
+
+        public String getAccount() {
+            return account;
+        }
+
+        public String getAmount() {
+            return amount;
+        }
+
+        public String getPaymentMethod() {
+            return paymentMethod;
+        }
     }
 
 }
