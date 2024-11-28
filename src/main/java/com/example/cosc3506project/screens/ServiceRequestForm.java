@@ -9,13 +9,15 @@ import javafx.scene.layout.*;
 
 public class ServiceRequestForm  {
 
-    public BorderPane getUserScreen(){
+    BorderPane root = new BorderPane();  // Root layout for the screen
+    VBox leftPanel = new VBox(10);  // The left panel menu
 
-        // Main layout
-        BorderPane root = new BorderPane();
+    public ServiceRequestForm() {
+        setupLeftPanel();
+    }
 
+    private void setupLeftPanel(){
         // Left panel (User & Main sections)
-        VBox leftPanel = new VBox(10);
         leftPanel.setPadding(new Insets(10));
         leftPanel.setPrefWidth(200);
         leftPanel.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px;");
@@ -30,6 +32,90 @@ public class ServiceRequestForm  {
 
         leftPanel.getChildren().addAll(userLabel, userMenu, mainLabel, mainMenu);
 
+        userMenu.setOnMouseClicked(e -> {
+            String selectedItem = userMenu.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                switch (selectedItem) {
+                    case "Request Services":
+                        showRequestServicesScreen();
+                        break;
+                    case "Track Progress":
+                        showTrackProgressScreen();
+                        break;
+                    case "Manage Payments":
+                        showManagePaymentsScreen();
+                        break;
+                    case "Edit Profiles":
+                        showEditProfilesScreen();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        mainMenu.setOnMouseClicked(e -> {
+            String selectedItem = mainMenu.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                switch (selectedItem) {
+                    case "New Service":
+                        showNewServiceScreen();
+                        break;
+                    case "Service Status":
+                        showServiceStatusScreen();
+                        break;
+                    case "Service History":
+                        showServiceHistoryScreen();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    private void showTrackProgressScreen() {
+        VBox trackProgressPanel = new VBox(10);
+        trackProgressPanel.setPadding(new Insets(20));
+        Label trackProgressTitle = new Label("Track Progress");
+        trackProgressTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        trackProgressPanel.getChildren().add(trackProgressTitle);
+
+        root.setCenter(trackProgressPanel);
+    }
+
+    private void showRequestServicesScreen() {
+        VBox requestServicesPanel = new VBox(10);
+        requestServicesPanel.setPadding(new Insets(20));
+        Label requestServicesTitle = new Label("Request Services");
+        requestServicesTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        requestServicesPanel.getChildren().add(requestServicesTitle);
+
+        root.setCenter(requestServicesPanel);
+
+    }
+
+    private void showManagePaymentsScreen() {
+        VBox managePaymentsPanel = new VBox(10);
+        managePaymentsPanel.setPadding(new Insets(20));
+        Label managePaymentsTitle = new Label("Manage Payments");
+        managePaymentsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        managePaymentsPanel.getChildren().add(managePaymentsTitle);
+
+        root.setCenter(managePaymentsPanel);
+    }
+
+    private void showEditProfilesScreen() {
+        VBox editProfilesPanel = new VBox(10);
+        editProfilesPanel.setPadding(new Insets(20));
+        Label editProfilesTitle = new Label("Edit Profiles");
+        editProfilesTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        editProfilesPanel.getChildren().add(editProfilesTitle);
+
+        root.setCenter(editProfilesPanel);
+    }
+
+    private void showNewServiceScreen() {
         // Center panel (Form)
         VBox formPanel = new VBox(10);
         formPanel.setPadding(new Insets(20));
@@ -92,6 +178,33 @@ public class ServiceRequestForm  {
 
         root.setLeft(leftPanel);
         root.setCenter(formPanel);
+
+        formPanel.getChildren().addAll(formTitle, formGrid, buttonBox);
+
+    }
+
+    private void showServiceStatusScreen() {
+        VBox serviceStatusPanel = new VBox(10);
+        serviceStatusPanel.setPadding(new Insets(20));
+        Label serviceStatusTitle = new Label("Service Status");
+        serviceStatusTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        serviceStatusPanel.getChildren().add(serviceStatusTitle);
+
+        root.setCenter(serviceStatusPanel);
+    }
+
+    private void showServiceHistoryScreen() {
+        VBox serviceHistoryPanel = new VBox(10);
+        serviceHistoryPanel.setPadding(new Insets(20));
+        Label serviceHistoryTitle = new Label("Service History");
+        serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        serviceHistoryPanel.getChildren().add(serviceHistoryTitle);
+
+        root.setCenter(serviceHistoryPanel);
+    }
+
+    public BorderPane getUserScreen(){
+        root.setLeft(leftPanel);
 
         return root;
     }
