@@ -9,7 +9,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class WebServer {
 
     public static void main(String[] args) throws Exception {
-        // Create a Jetty server on port 8080
+        // Create a Jetty server on port 8081
         Server server = new Server(8081);
 
         // Create a Servlet context
