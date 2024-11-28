@@ -10,15 +10,60 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import java.io.*;
 
 public class ProjectManagementSystem {
 
     BorderPane root = new BorderPane();  // Root layout for the screen
     VBox leftPanel = new VBox(10);  // The left panel menu
 
+    protected static final String FILE_PATH = "user_data.csv";
+
+    ObservableList<ProjectManagementSystem.User> data = FXCollections.observableArrayList();
+
+    protected void importData() {
+        File file = new File(FILE_PATH);
+
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] details = line.split(" ");
+                    if (details.length == 5) {
+                        String id = details[0].trim();
+                        String name = details[1].trim();
+                        String contact = details[2].trim();
+                        String status = details[3].trim();
+                        String email = details[4].trim();
+
+                        data.add(new ProjectManagementSystem.User(id, name, contact, status, email));
+
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    private void saveData() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            for (User user : data) {
+                bw.write(user.userId + " " + user.account + " " +
+                        user.contact + " " +  user.status + " " +  user.email);
+                bw.newLine();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    };
+
+
     // Constructor to initialize the left panel
     public ProjectManagementSystem() {
         setupLeftPanel();
+        importData();   //imports user data to user table
     }
 
     // Setup the left panel once
@@ -58,7 +103,7 @@ public class ProjectManagementSystem {
     }
 
 
-    public BorderPane getAdminScreen(MainScreen app) {
+    public BorderPane getAdminScreen() {
         root.setLeft(leftPanel);
 
         showManageUsersScreen();
@@ -181,10 +226,6 @@ public class ProjectManagementSystem {
         emailCol.setMinWidth(200);
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        TableColumn<User, String> permsCol = new TableColumn<>("Permissions");
-        permsCol.setMinWidth(200);
-        permsCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-
         // Add delete button column
         TableColumn<User, Void> actionCol = new TableColumn<>("Action");
         actionCol.setMinWidth(80);
@@ -195,6 +236,7 @@ public class ProjectManagementSystem {
                 deleteButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
                     table.getItems().remove(user);
+                    saveData();     //preserve changes
                 });
             }
 
@@ -211,21 +253,42 @@ public class ProjectManagementSystem {
 
         table.getColumns().addAll(userIdCol, accountCol, contactCol, statusCol, emailCol, actionCol);
 
-        // Sample data
-        ObservableList<User> data = FXCollections.observableArrayList(
-                new User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca",
-                        FXCollections.observableArrayList("Client", "Contractor", "Admin")),
-                new User("2000590", "Sam", "324-876-7983", "Inactive", "sam@outlook.ca",
-                        FXCollections.observableArrayList("Client", "Contractor", "Admin")),
-                new User("2000591", "Bob", "432-654-3164", "Active", "bob@outlook.ca",
-                        FXCollections.observableArrayList("Client", "Contractor", "Admin"))
-        );
+
+        Button addUser = new Button("Add User");
+        TextArea newUser = new TextArea();
+        newUser.setPromptText("Enter user details in above column order separated by space");
+        // newUser.setEditable(true);
+
+        addUser.setOnAction(event -> {
+            String input = newUser.getText();
+            String[] details = input.split(" ");
+            if (details.length == 5) {
+                String id = details[0];
+                String name = details[1];
+                String contact = details[2];
+                String status = details[3];
+                String email = details[4];
+
+
+                data.add(new User(id, name, contact, status, email));
+                saveData();     //preserve changes
+                newUser.clear();
+
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Invalid user details");
+            }
+
+        });
         table.setItems(data);
 
-        centerPanel.getChildren().addAll(centerTitle, table);
+        centerPanel.getChildren().addAll(centerTitle, table, addUser, newUser);
 
         root.setCenter(centerPanel);
     }
+
 
     // User class
     public static class User {
