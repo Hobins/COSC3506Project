@@ -16,8 +16,14 @@ Once it launches a screen should pop up, and you can login into the screens with
 - Username: `admin`
 - Password: `123`
 To see the admin panel and functions.
+
 or
 - Username: `user`
 - Password: `123`
 To see the user panel and functions.
+
+or
+- Username: `contractor`
+- Password: `123`
+To see the contractor panel and functions.
 

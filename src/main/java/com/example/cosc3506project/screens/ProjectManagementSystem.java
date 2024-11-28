@@ -58,7 +58,7 @@ public class ProjectManagementSystem {
     }
 
 
-    public BorderPane getAdminScreen(MainScreen app) {
+    public BorderPane getAdminScreen() {
         root.setLeft(leftPanel);
 
         showManageUsersScreen();

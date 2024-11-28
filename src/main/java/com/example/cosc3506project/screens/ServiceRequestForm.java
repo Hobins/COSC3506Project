@@ -81,6 +81,14 @@ public class ServiceRequestForm  {
         });
     }
 
+
+    public BorderPane getUserScreen(){
+        root.setLeft(leftPanel);
+
+        return root;
+    }
+
+
     private void showTrackProgressScreen() {
         VBox trackProgressPanel = new VBox(10);
         trackProgressPanel.setPadding(new Insets(20));
@@ -324,13 +332,6 @@ public class ServiceRequestForm  {
 
         root.setCenter(serviceHistoryPanel);
     }
-
-    public BorderPane getUserScreen(){
-        root.setLeft(leftPanel);
-
-        return root;
-    }
-
 
     // Payment class
     public static class Payment {

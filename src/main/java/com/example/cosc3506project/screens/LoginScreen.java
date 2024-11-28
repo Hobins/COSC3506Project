@@ -39,12 +39,16 @@ public class LoginScreen {
                 if ("success".equals(result)) {
                     resultLabel.setText("Login Successful!");
 
-                    app.setScreen(new ProjectManagementSystem().getAdminScreen(app));
+                    app.setScreen(new ProjectManagementSystem().getAdminScreen());
 
                 } else if ("user".equals(result)) {
                     resultLabel.setText("Login Successful!");
 
                     app.setScreen(new ServiceRequestForm().getUserScreen());
+                } else if("contractor".equals(result)){
+                    resultLabel.setText("Login Successful!");
+
+                    app.setScreen(new ContractorPage().getContractorScreen());
                 }
                 else if ("failure".equals(result)) { // Handle specific failure response
                     resultLabel.setText("Login failed. Please check your credentials.");
