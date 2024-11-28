@@ -83,16 +83,6 @@ public class ServiceRequestForm  {
     }
 
 
-    private void showTrackProgressScreen() {
-        VBox trackProgressPanel = new VBox(10);
-        trackProgressPanel.setPadding(new Insets(20));
-        Label trackProgressTitle = new Label("Track Progress");
-        trackProgressTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        trackProgressPanel.getChildren().add(trackProgressTitle);
-
-        root.setCenter(trackProgressPanel);
-    }
-
     private void showPaymentHistoryScreen() {
 
         VBox managePaymentsPanel = new VBox(10);
@@ -303,6 +293,30 @@ public class ServiceRequestForm  {
         serviceStatusTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         serviceStatusPanel.getChildren().add(serviceStatusTitle);
 
+        TableView<Services> serviceStatusTable = new TableView<>();
+
+        TableColumn<Services, String> serviceTypeColumn = new TableColumn<>("Service Type");
+        serviceTypeColumn.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
+
+        TableColumn<Services, String> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<Services, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<Services, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        serviceStatusTable.getColumns().addAll(serviceTypeColumn, dateColumn, descriptionColumn, statusColumn);
+
+        serviceStatusPanel.getChildren().add(serviceStatusTable);
+
+        serviceStatusTable.setItems(FXCollections.observableArrayList(
+                new Services("Service 1", "01/01/2021", "Description 1", "Pending"),
+                new Services("Service 2", "02/02/2021", "Description 2", "Pending"),
+                new Services("Service 3", "03/03/2021", "Description 3", "Pending")
+        ));
+
         root.setCenter(serviceStatusPanel);
     }
 
@@ -331,21 +345,18 @@ public class ServiceRequestForm  {
 
         serviceHistoryPanel.getChildren().add(serviceHistoryTable);
 
-        serviceHistoryTable.setItems(getServiceHistory());
+        serviceHistoryTable.setItems(FXCollections.observableArrayList(
+                new Services("Plumbing", "01/01/2021", "Added new pipes", "Completed"),
+                new Services("Electrical", "02/02/2021", "Updated all the house wiring", "Completed"),
+                new Services("House addition", "03/03/2021", "Constructing an addition for the household", "Canceled")
+        ));
 
 
         root.setCenter(serviceHistoryPanel);
     }
 
-    // Sample data
-    private ObservableList<Services> getServiceHistory() {
-        return FXCollections.observableArrayList(
-                new Services("Plumbing", "2024-11-20", "Added new pipes", "Completed"),
-                new Services("Electrical", "2024-11-15", "Replace kitchen light.", "Canceled"),
-                new Services("Cleaning", "2024-11-10", "Cleaned the house", "Completed")
 
-        );
-    }
+
 
     // Payment class
     public static class Payment {
