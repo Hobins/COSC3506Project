@@ -2,12 +2,10 @@ package com.example.cosc3506project;
 
 import com.example.cosc3506project.screens.LoginScreen;
 import javafx.application.Application;
-import javafx.scene.control.Label;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-
-import java.io.IOException;
 
 public class MainScreen extends Application {
 
@@ -39,11 +37,10 @@ public class MainScreen extends Application {
         stage.show();
     }
 
-    public void setScreen(javafx.scene.Node newScreen) {
+    public Node setScreen(Node newScreen) {
         mainLayout.setCenter(newScreen);
+        return newScreen;
     }
-
-
 
     public static void main(String[] args) {
         launch();
