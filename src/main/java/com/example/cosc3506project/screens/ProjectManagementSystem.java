@@ -1,13 +1,16 @@
 package com.example.cosc3506project.screens;
-
+// admin page code
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.util.Callback;
 
 public class ProjectManagementSystem {
 
@@ -140,4 +143,3 @@ public class ProjectManagementSystem {
         }
     }
 }
-
