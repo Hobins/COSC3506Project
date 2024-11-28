@@ -69,7 +69,7 @@ public class LoginScreen {
         HBox buttons = new HBox(10);
         buttons.getChildren().addAll(loginButton, createAcc);
         layout.getChildren().addAll(companyLabel, usernameLabel, usernameField, passwordLabel, passwordField, forgotPassword, buttons, resultLabel);
-        layout.setPadding(new Insets(200, 200, 200, 200));
+        layout.setPadding(new Insets(250, 200, 200, 200));
         return layout;
     }
 
