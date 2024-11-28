@@ -227,11 +227,11 @@ public class ContractorPage {
     }
 
     private void showActiveProjectsScreen() {
-        VBox serviceHistoryPanel = new VBox(10);
-        serviceHistoryPanel.setPadding(new Insets(20));
+        VBox activeProjectsPanel = new VBox(10);
+        activeProjectsPanel.setPadding(new Insets(20));
         Label serviceHistoryTitle = new Label("Active Projects");
         serviceHistoryTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        serviceHistoryPanel.getChildren().add(serviceHistoryTitle);
+        activeProjectsPanel.getChildren().add(serviceHistoryTitle);
 
         TableView<ServiceRequestForm.Services> projectsTable = new TableView<>();
 
@@ -249,7 +249,7 @@ public class ContractorPage {
 
         projectsTable.getColumns().addAll(serviceTypeCol, dateCol, descriptionCol, statusCol);
 
-        serviceHistoryPanel.getChildren().add(projectsTable);
+        activeProjectsPanel.getChildren().add(projectsTable);
 
         projectsTable.setItems(FXCollections.observableArrayList(
                 new ServiceRequestForm.Services("Plumbing", "09/06/2024", "Requested plumbing to be laid", "Approved"),
@@ -258,7 +258,7 @@ public class ContractorPage {
                 new ServiceRequestForm.Services("Housing Unit", "11/22/2024", "Requested construction of property", "Waiting for Approval")
         ));
 
-        root.setCenter(serviceHistoryPanel);
+        root.setCenter(activeProjectsPanel);
     }
 
 
