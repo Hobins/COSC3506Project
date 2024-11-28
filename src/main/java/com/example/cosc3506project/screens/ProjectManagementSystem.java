@@ -183,7 +183,7 @@ public class ProjectManagementSystem {
 
         TableColumn<User, String> permsCol = new TableColumn<>("Permissions");
         permsCol.setMinWidth(200);
-        permsCol.setCellValueFactory(new PropertyValueFactory<>("perms"));
+        permsCol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         // Add delete button column
         TableColumn<User, Void> actionCol = new TableColumn<>("Action");
