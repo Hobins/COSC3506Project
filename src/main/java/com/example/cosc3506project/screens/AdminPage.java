@@ -1,5 +1,6 @@
 package com.example.cosc3506project.screens;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -135,7 +136,6 @@ public class AdminPage {
 
         TableView<User> table = new TableView<>();
         table.setEditable(true);
-
         // Define columns
         TableColumn<User, String> userIdCol = new TableColumn<>("User ID");
         userIdCol.setMinWidth(100);
@@ -145,7 +145,11 @@ public class AdminPage {
         accountCol.setMinWidth(100);
         accountCol.setCellValueFactory(new PropertyValueFactory<>("account"));
 
-        TableColumn<User, Void> typeCol = new TableColumn<>("Account Type");
+        TableColumn<User, String> accTypeCol = new TableColumn<>("Account");
+        accTypeCol.setMinWidth(100);
+        accTypeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
+
+        TableColumn<User, Void> typeCol = new TableColumn<>("Change Account Type");
         typeCol.setMinWidth(100);
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
@@ -157,6 +161,9 @@ public class AdminPage {
             {
                 updateButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
+                    user.setUserType((String) user.getType().getValue());
+                    accTypeCol.setCellValueFactory(new PropertyValueFactory<>("userType"));
+                    table.refresh();
                 });
             }
 
@@ -171,15 +178,15 @@ public class AdminPage {
             }
         });
 
-        table.getColumns().addAll(userIdCol, accountCol, typeCol, actionCol);
+        table.getColumns().addAll(userIdCol, accountCol, accTypeCol, typeCol, actionCol);
 
         // Sample data
         ObservableList<User> data = FXCollections.observableArrayList(
-                new User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca",
+                new User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca", "Contractor",
                         FXCollections.observableArrayList("Client", "Contractor", "Admin")),
-                new User("2000590", "Sam", "324-876-7983", "Inactive", "sam@outlook.ca",
+                new User("2000590", "Sam", "324-876-7983", "Inactive", "sam@outlook.ca", "Client",
                         FXCollections.observableArrayList("Client", "Contractor", "Admin")),
-                new User("2000591", "Bob", "432-654-3164", "Active", "bob@outlook.ca",
+                new User("2000591", "Bob", "432-654-3164", "Active", "bob@outlook.ca", "Admin",
                         FXCollections.observableArrayList("Client", "Contractor", "Admin"))
         );
         table.setItems(data);
@@ -302,6 +309,7 @@ public class AdminPage {
         private String contact;
         private String status;
         private String email;
+        private String userType;
         private ComboBox type;
 
         public User(String userId, String account, String contact, String status, String email, ObservableList data) {
@@ -310,6 +318,18 @@ public class AdminPage {
             this.contact = contact;
             this.status = status;
             this.email = email;
+            this.type = new ComboBox(data);
+            type.setPromptText("Account Type");
+            type.setEditable(true);
+        }
+
+        public User(String userId, String account, String contact, String status, String email, String userType, ObservableList data) {
+            this.userId = userId;
+            this.account = account;
+            this.contact = contact;
+            this.status = status;
+            this.email = email;
+            this.userType = userType;
             this.type = new ComboBox(data);
             type.setPromptText("Account Type");
             type.setEditable(true);
@@ -344,6 +364,10 @@ public class AdminPage {
             return email;
         }
 
+        public String getUserType(){
+            return userType;
+        }
+
         public void setAccount(String account) {
             this.account = account;
         }
@@ -354,6 +378,10 @@ public class AdminPage {
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public void setUserType(String userType) {
+            this.userType = userType;
         }
 
         public ComboBox getType() {
