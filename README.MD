@@ -27,3 +27,13 @@ or
 - Password: `123`
 To see the contractor panel and functions.
 
+#NOTE 
+- The system is hardcoded to only allow these 3 users to login.
+- The system must be re-run to test the different users.
+
+## Made by:
+- Jerry
+- Nisan
+- Presley
+- Steven
+

@@ -1,12 +1,11 @@
 package com.example.cosc3506project.servlets;
 
-import jakarta.servlet.ServletException;
+
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,8 +64,15 @@ public class ServiceHistoryServlet extends HttpServlet {
         }
     }
 
+    /**
+     * This method is called when the servlet receives a GET request
+     * It returns a list of services in JSON format
+     * @param req The request object
+     * @param resp The response object
+     * @throws IOException
+     */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 

@@ -12,6 +12,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class WebServer {
 
+    /**
+     * Main method to run the server
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         // Create a Jetty server on port 8081
         Server server = new Server(8081);

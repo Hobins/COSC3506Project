@@ -15,9 +15,16 @@ import java.util.Scanner;
 public class LoginScreen {
 
 
+    /**
+     * Checks to see if the users is an admin, user, or contractor
+     * if the user is an admin, go to the admin page
+     * if the user is a user, go to the user page
+     * if the user is a contractor, go to the contractor page
+     *
+     */
     public static VBox getScreen(MainScreen app){
-        Label companyLabel = new Label("Management Company Name");
-        Label usernameLabel = new Label("Email");
+        Label companyLabel = new Label("Construction Project Management System");
+        Label usernameLabel = new Label("Username");
         Label passwordLabel = new Label("Password");
 
         TextField usernameField = new TextField();
@@ -36,7 +43,7 @@ public class LoginScreen {
 
             try {
                 String result = sendLogin(userInput, passInput);
-                if ("success".equals(result)) {
+                if ("admin".equals(result)) {
                     resultLabel.setText("Login Successful!");
 
                     app.setScreen(new AdminPage().getAdminScreen());
@@ -77,6 +84,14 @@ public class LoginScreen {
         return layout;
     }
 
+    /**
+     * Sends a login request to the LoginServlet.
+     * This is called from the MainScreen class after the user clicks the login button.
+     *
+     * @param username The username to send
+     * @param password The password to send
+     * @return The response from the server
+     */
     private static String sendLogin(String username, String password) throws Exception {
 
         URL url = new URL("http://localhost:8081/login");

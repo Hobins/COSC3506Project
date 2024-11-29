@@ -39,11 +39,11 @@ public class UserPage {
     }
 
     /**
-     * This sets-ups the left panel for the whole contactor menu
+     * This sets-up the left panel for the whole contactor menu
      *
      */
     private void setupLeftPanel(){
-        // Left panel (User & Main sections)
+
         leftPanel.setPadding(new Insets(10));
         leftPanel.setPrefWidth(200);
         leftPanel.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px;");
@@ -435,7 +435,6 @@ public class UserPage {
                     responseBuilder.append(line);
                 }
 
-                // Parse the JSON array from the response
                 JSONArray jsonArray = new JSONArray(responseBuilder.toString());
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -446,7 +445,6 @@ public class UserPage {
                     String description = jsonObject.getString("description");
                     String status = jsonObject.getString("status");
 
-                    // Add the parsed object to the data list
                     data.add(new ServiceHistoryServlet.Services(serviceType, date, description, status));
                 }
             }
@@ -461,7 +459,6 @@ public class UserPage {
         return data;
     }
 
-    // Payment class
     public static class Payment {
         private String invoice;
         private String dateSent;

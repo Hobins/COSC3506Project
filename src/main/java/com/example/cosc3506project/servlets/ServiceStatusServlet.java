@@ -70,6 +70,13 @@ public class ServiceStatusServlet extends HttpServlet{
             }
         }
 
+        /**
+         * This method is called when the servlet receives a GET request
+         * It returns a list of services in JSON format
+         * @param req The request object
+         * @param resp The response object
+         * @throws IOException
+         */
         @Override
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             resp.setContentType("application/json");

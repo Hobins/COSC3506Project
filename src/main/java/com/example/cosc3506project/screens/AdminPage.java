@@ -72,12 +72,15 @@ public class AdminPage {
      */
     public AdminPage() {
         setupLeftPanel();
-        importData();   //imports user data to user table
+        importData();
     }
 
-    // Setup the left panel once
+    /**
+     * This sets-up the left panel for the whole Admin menu
+     *
+     */
     private void setupLeftPanel() {
-        // Left panel (Admin menu)
+
         leftPanel.setPadding(new Insets(10));
         leftPanel.setPrefWidth(200);
         leftPanel.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px;");
@@ -92,9 +95,6 @@ public class AdminPage {
                 switch (selectedItem) {
                     case "Manage Users":
                         showManageUsersScreen();
-                        break;
-                    case "User Roles":
-                        showUserRolesScreen();
                         break;
                     case "Assign Permissions":
                         showAssignPermissionsScreen();
@@ -111,7 +111,10 @@ public class AdminPage {
         leftPanel.getChildren().addAll(adminLabel, adminMenu);
     }
 
-
+    /**
+     * This is called when the user is logged in and confirmed to be a Admin
+     *
+     */
     public BorderPane getAdminScreen() {
         root.setLeft(leftPanel);
 
@@ -120,16 +123,10 @@ public class AdminPage {
         return root;
     }
 
-    public void showUserRolesScreen() {
-        VBox userRoles = new VBox(10);
-        userRoles.setPadding(new Insets(20));
-        Label title = new Label("User Roles");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        userRoles.getChildren().add(title);
-
-        root.setCenter(userRoles);
-    }
-
+    /**
+     * This displays a  permissions screen for the admin to change the permissions of the users
+     *
+     */
     public void showAssignPermissionsScreen() {
         VBox assignPerms = new VBox(10);
         assignPerms.setPadding(new Insets(20));
@@ -138,7 +135,7 @@ public class AdminPage {
 
         TableView<User> table = new TableView<>();
         table.setEditable(true);
-        // Define columns
+
         TableColumn<User, String> userIdCol = new TableColumn<>("User ID");
         userIdCol.setMinWidth(100);
         userIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
@@ -182,7 +179,6 @@ public class AdminPage {
 
         table.getColumns().addAll(userIdCol, accountCol, accTypeCol, typeCol, actionCol);
 
-        // Sample data
         ObservableList<User> data = FXCollections.observableArrayList(
                 new User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca", "Contractor",
                         FXCollections.observableArrayList("Client", "Contractor", "Admin")),
@@ -198,6 +194,10 @@ public class AdminPage {
         root.setCenter(assignPerms);
     }
 
+    /**
+     * This displays a Financial screen for the admin to manage the financials of a certain record.
+     *
+     */
     public void showFinancialsScreen() {
         VBox financials = new VBox(10);
         financials.setPadding(new Insets(20));
@@ -312,6 +312,11 @@ public class AdminPage {
         root.setCenter(financials);
     }
 
+    /**
+     * This displays a screen for the admin to manage the users of the system.
+     * The admin can edit or delete users from the system.
+     *
+     */
     private void showManageUsersScreen() {
         VBox centerPanel = new VBox(10);
         centerPanel.setPadding(new Insets(20));
@@ -408,7 +413,6 @@ public class AdminPage {
     }
 
 
-    // User class
     public static class User {
         private String userId;
         private String account;
@@ -495,7 +499,7 @@ public class AdminPage {
         }
     }
 
-    class FinancialData {
+    public static class FinancialData {
         private final SimpleStringProperty category;
         private final SimpleDoubleProperty amount;
 

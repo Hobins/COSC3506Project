@@ -11,9 +11,14 @@ public class MainScreen extends Application {
 
     private BorderPane mainLayout;
 
+    /**
+     * Start the JavaFX application and display the initial screen.
+     * Starts the server in a separate thread.
+     * @param stage The primary stage for this application.
+     */
     @Override
     public void start(Stage stage) {
-        // Start the WebServer in a separate thread
+
         Thread webServerThread = new Thread(() -> {
             try {
                 WebServer.main(null);
@@ -21,27 +26,33 @@ public class MainScreen extends Application {
                 e.printStackTrace();
             }
         });
-        webServerThread.setDaemon(true); // Stops the thread when the JavaFX app exits
+        webServerThread.setDaemon(true);
         webServerThread.start();
 
-        // Create the main layout
         mainLayout = new BorderPane();
         stage.setTitle("Construction Project Management System");
 
-        // Set the initial screen content (e.g., Login screen)
         mainLayout.setCenter(LoginScreen.getScreen(this));
 
-        // Create and display the scene
         Scene scene = new Scene(mainLayout, 1000, 800);
         stage.setScene(scene);
         stage.show();
     }
 
+    /**
+     * Set the screen content to the new screen.
+     * @param newScreen The new screen to display.
+     * @return The new screen.
+     */
     public Node setScreen(Node newScreen) {
         mainLayout.setCenter(newScreen);
         return newScreen;
     }
 
+    /**
+     * Launch the JavaFX application.
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch();
     }

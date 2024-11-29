@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet{
         String password = request.getParameter("password");
 
         if (ADMIN_USER.equals(username) && ADMIN_PASS.equals(password)) {
-            response.getWriter().write("success");
+            response.getWriter().write("admin");
         } else if (USER_USER.equals(username) && USER_PASS.equals(password)) {
             response.getWriter().write("user");
         } else if (CONTRACTOR_USER.equals(username) && CONTRACTOR_PASS.equals(password)) {
