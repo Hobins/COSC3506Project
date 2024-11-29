@@ -1,6 +1,7 @@
 package com.example.cosc3506project.screens;
 
 import com.example.cosc3506project.MainScreen;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class LoginScreen {
-
 
 
     public static VBox getScreen(MainScreen app){
