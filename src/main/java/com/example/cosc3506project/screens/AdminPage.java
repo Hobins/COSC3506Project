@@ -65,14 +65,18 @@ public class AdminPage {
 
 
     /**
-     * Constructor for the ProjectManagementSystem
+     * Constructor for the AdminPage
+     * This will call the setupLeftPanel method and importData method
      */
     public AdminPage() {
         setupLeftPanel();
         importData();   //imports user data to user table
     }
 
-    // Setup the left panel once
+    /**
+     * This sets up the left panel for the whole admin menu
+     *
+     */
     private void setupLeftPanel() {
         // Left panel (Admin menu)
         leftPanel.setPadding(new Insets(10));
@@ -81,7 +85,7 @@ public class AdminPage {
 
         Label adminLabel = new Label("Administrator");
         ListView<String> adminMenu = new ListView<>();
-        adminMenu.getItems().addAll("Dashboard", "Manage Users", "User Roles", "Assign Permissions", "Financials");
+        adminMenu.getItems().addAll("Dashboard", "Manage Users", "Assign Permissions", "Financials");
 
         adminMenu.setOnMouseClicked(e -> {
             String selectedItem = adminMenu.getSelectionModel().getSelectedItem();
@@ -89,9 +93,6 @@ public class AdminPage {
                 switch (selectedItem) {
                     case "Manage Users":
                         showManageUsersScreen();
-                        break;
-                    case "User Roles":
-                        showUserRolesScreen();
                         break;
                     case "Assign Permissions":
                         showAssignPermissionsScreen();
@@ -109,6 +110,10 @@ public class AdminPage {
     }
 
 
+    /**
+     * This is called when the user is logged in and confirmed to be an admin
+     *
+     */
     public BorderPane getAdminScreen() {
         root.setLeft(leftPanel);
 
@@ -117,16 +122,11 @@ public class AdminPage {
         return root;
     }
 
-    public void showUserRolesScreen() {
-        VBox userRoles = new VBox(10);
-        userRoles.setPadding(new Insets(20));
-        Label title = new Label("User Roles");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        userRoles.getChildren().add(title);
 
-        root.setCenter(userRoles);
-    }
-
+    /**
+     * This allows the admin to change the user roles for the users
+     *
+     */
     public void showAssignPermissionsScreen() {
         VBox assignPerms = new VBox(10);
         assignPerms.setPadding(new Insets(20));
@@ -189,6 +189,10 @@ public class AdminPage {
         root.setCenter(assignPerms);
     }
 
+    /**
+     * This shows the financials screen and allows the admin to make some changes
+     *
+     */
     public void showFinancialsScreen() {
         VBox financials = new VBox(10);
         financials.setPadding(new Insets(20));
@@ -199,6 +203,10 @@ public class AdminPage {
         root.setCenter(financials);
     }
 
+    /**
+     * This shows the manage users screen and allows update and add users
+     *
+     */
     private void showManageUsersScreen() {
         VBox centerPanel = new VBox(10);
         centerPanel.setPadding(new Insets(20));

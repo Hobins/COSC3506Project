@@ -39,7 +39,7 @@ public class UserPage {
     }
 
     /**
-     * This sets-ups the left panel for the whole contactor menu
+     * This sets up the left panel for the whole contactor menu
      *
      */
     private void setupLeftPanel(){
