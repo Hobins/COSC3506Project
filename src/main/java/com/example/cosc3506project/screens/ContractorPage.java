@@ -223,7 +223,62 @@ public class ContractorPage {
     }
 
     private void showEditScreen() {
+        VBox editScreenPanel = new VBox(10);
+        editScreenPanel.setPadding(new Insets(20));
+        Label editTitle = new Label("Edit Projects");
+        editTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        editScreenPanel.getChildren().add(editTitle);
 
+        TableView<ServiceRequestForm.Services> editProjectsTable = new TableView<>();
+
+        TableColumn<ServiceRequestForm.Services, String> serviceTypeCol = new TableColumn<>("Service Type");
+        serviceTypeCol.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
+
+        TableColumn<ServiceRequestForm.Services, String> dateCol = new TableColumn<>("Date Requested");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<ServiceRequestForm.Services, String> descriptionCol = new TableColumn<>("Description");
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<ServiceRequestForm.Services, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        TableColumn<ServiceRequestForm.Services, String> completeCol = new TableColumn<>("Mark as Complete");
+        completeCol.setMinWidth(80);
+        completeCol.setCellFactory(param -> new TableCell<>() {
+            private final Button completeButton = new Button("Complete");
+
+            {
+                completeButton.setOnAction(event -> {
+                    ServiceRequestForm.Services services = (ServiceRequestForm.Services) getTableView().getItems();
+                    services.setStatus("Complete");
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                ServiceRequestForm.Services services = (ServiceRequestForm.Services) getTableView().getItems();
+                super.updateItem(item, empty);
+                if (empty && services.getStatus() == "Complete") {
+                    setGraphic(null);
+                } else {
+                    setGraphic(completeButton);
+                }
+            }
+        });
+
+        editProjectsTable.getColumns().addAll(serviceTypeCol, dateCol, descriptionCol, statusCol, completeCol);
+
+        editScreenPanel.getChildren().add(editProjectsTable);
+
+        editProjectsTable.setItems(FXCollections.observableArrayList(
+                new ServiceRequestForm.Services("Plumbing", "09/06/2024", "Requested plumbing to be laid", "Complete"),
+                new ServiceRequestForm.Services("Electrical", "10/03/2024", "Requested new wiring throughout property", "Pending"),
+                new ServiceRequestForm.Services("House addition", "11/16/2024", "Requested house addition to be constructed", "Pending"),
+                new ServiceRequestForm.Services("Housing Unit", "11/22/2024", "Requested construction of property", "Pending")
+        ));
+
+        root.setCenter(editScreenPanel);
     }
 
     private void showActiveProjectsScreen() {
