@@ -12,9 +12,14 @@ module com.example.cosc3506project {
     requires jetty.servlet.api;
     requires org.eclipse.jetty.server;
     requires org.eclipse.jetty.servlet;
+    requires org.json;
 
     opens com.example.cosc3506project to javafx.fxml, javafx.graphics;
+    opens com.example.cosc3506project.servlets to java.base;
+    opens com.example.cosc3506project.screens to javafx.fxml, javafx.graphics;
+
     exports com.example.cosc3506project;
     exports com.example.cosc3506project.screens;
-    opens com.example.cosc3506project.screens to javafx.fxml, javafx.graphics;
+    exports com.example.cosc3506project.servlets;
+
 }
