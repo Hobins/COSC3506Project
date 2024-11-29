@@ -31,13 +31,21 @@ public class ContractorPage {
 
 
 
-    // Constructor to initialize the left panel
+    /**
+     * Constructor for the ContractorPage
+     * This will keep the left panel static
+     * and forces the user to be hardcoded
+     *
+     */
     public ContractorPage() {
         this.currentUser = new ProjectManagementSystem.User("2350529", "Ryan", "705-382-3941", "Active", "ryan123@gmail.ca");
         setupLeftPanel();
     }
 
-    // Setup the left panel once
+    /**
+     * This sets-ups the left panel for the whole contactor menu
+     *
+     */
     private void setupLeftPanel() {
         // Left panel (Admin menu)
         leftPanel.setPadding(new Insets(10));
@@ -73,6 +81,10 @@ public class ContractorPage {
         leftPanel.getChildren().addAll(contractorLabel, contractorMenu);
     }
 
+    /**
+     * This is called when the user is logged in and confirmed to be a contractor
+     *
+     */
     public BorderPane getContractorScreen() {
         root.setLeft(leftPanel);
 
@@ -80,6 +92,10 @@ public class ContractorPage {
         return root;
     }
 
+    /**
+     * This displays the profile screen and allows the user to edit themselves while logged in.
+     *
+     */
     private void showEditProfileScreen() {
         VBox editProfilesPanel = new VBox(10);
         editProfilesPanel.setPadding(new Insets(20));
@@ -154,6 +170,10 @@ public class ContractorPage {
         root.setCenter(editProfilesPanel);
     }
 
+    /**
+     * This allows the contractor to send invoices to a specific person
+     *
+     */
     private void showInvoiceScreen() {
         VBox mainContent = new VBox(10);
         mainContent.setPadding(new Insets(10));
@@ -236,12 +256,17 @@ public class ContractorPage {
 
     }
 
+    /**
+     * Show the screen for the user to view their active projects
+     * This screen will display the table from the ActiveProjectServlet
+     *
+     */
     private void showActiveProjectsScreen() {
         VBox activeProjectsPanel = new VBox(10);
         activeProjectsPanel.setPadding(new Insets(20));
-        Label activePojectTitla = new Label("Active Projects");
-        activePojectTitla.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        activeProjectsPanel.getChildren().add(activePojectTitla);
+        Label activeProjectTitle = new Label("Active Projects");
+        activeProjectTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        activeProjectsPanel.getChildren().add(activeProjectTitle);
 
         TableView<ActiveProjectServlet.Services> projectsTable = new TableView<>();
 
@@ -266,6 +291,12 @@ public class ContractorPage {
         root.setCenter(activeProjectsPanel);
     }
 
+/**
+     * This method retrieves the data from the ActiveProjectServlet
+     * and returns an ObservableList of the data
+     *
+     * @return ObservableList of the data from the ActiveProjectServlet
+     */
     private ObservableList<ActiveProjectServlet.Services> getDataFromActiveProjectServlet() {
         ObservableList<ActiveProjectServlet.Services> data = FXCollections.observableArrayList();
 
