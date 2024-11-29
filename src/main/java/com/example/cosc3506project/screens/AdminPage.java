@@ -1,5 +1,7 @@
 package com.example.cosc3506project.screens;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -203,6 +205,110 @@ public class AdminPage {
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         financials.getChildren().add(title);
 
+        // Table for Financials
+        TableView<FinancialData> financialTable = new TableView<>();
+        financialTable.setPrefHeight(400);
+        financialTable.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+
+        TableColumn<FinancialData, String> categoryColumn = new TableColumn<>("Category");
+        categoryColumn.setCellValueFactory(data -> data.getValue().categoryProperty());
+
+        TableColumn<FinancialData, Double> amountColumn = new TableColumn<>("Amount");
+        amountColumn.setCellValueFactory(data -> data.getValue().amountProperty().asObject());
+
+        financialTable.getColumns().addAll(categoryColumn, amountColumn);
+
+        // Add initial mock data to the table
+        ObservableList<FinancialData> financialData = FXCollections.observableArrayList(
+                new FinancialData("Materials", 200.0),
+                new FinancialData("Labour", 400.0),
+                new FinancialData("Tax", 150.0)
+        );
+        financialTable.setItems(financialData);
+
+        // Add Data Input Fields
+        HBox dataFields = new HBox(10);
+        dataFields.setPadding(new Insets(10));
+        dataFields.setStyle("-fx-border-color: lightgray; -fx-border-width: 1;");
+
+        TextField categoryField = new TextField();
+        categoryField.setPromptText("Enter Category");
+
+        TextField amountField = new TextField();
+        amountField.setPromptText("Enter Amount");
+
+        Button addButton = new Button("Add");
+        Button updateButton = new Button("Update");
+        Button deleteButton = new Button("Delete");
+
+        // Add Button Functionality
+        addButton.setOnAction(e -> {
+            try {
+                String category = categoryField.getText();
+                double amount = Double.parseDouble(amountField.getText());
+
+                // Add new data to the table
+                financialData.add(new FinancialData(category, amount));
+
+                // Clear input fields
+                categoryField.clear();
+                amountField.clear();
+            } catch (NumberFormatException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter a valid amount.", ButtonType.OK);
+                alert.show();
+            }
+        });
+
+        // Update Button Functionality
+        updateButton.setOnAction(e -> {
+            FinancialData selectedItem = financialTable.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                try {
+                    String newCategory = categoryField.getText();
+                    double newAmount = Double.parseDouble(amountField.getText());
+
+                    selectedItem.setCategory(newCategory);
+                    selectedItem.setAmount(newAmount);
+
+                    // Refresh the table
+                    financialTable.refresh();
+
+                    // Clear input fields
+                    categoryField.clear();
+                    amountField.clear();
+                } catch (NumberFormatException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter a valid amount.", ButtonType.OK);
+                    alert.show();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a record to update.", ButtonType.OK);
+                alert.show();
+            }
+        });
+
+        // Delete Button Functionality
+        deleteButton.setOnAction(e -> {
+            FinancialData selectedItem = financialTable.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                financialData.remove(selectedItem);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a record to delete.", ButtonType.OK);
+                alert.show();
+            }
+        });
+
+        // Table Selection Listener
+        financialTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                categoryField.setText(newSelection.getCategory());
+                amountField.setText(String.valueOf(newSelection.getAmount()));
+            }
+        });
+
+        dataFields.getChildren().addAll(categoryField, amountField, addButton, updateButton, deleteButton);
+
+        financials.getChildren().addAll(financialTable, dataFields);
+
         root.setCenter(financials);
     }
 
@@ -388,6 +494,41 @@ public class AdminPage {
             return type;
         }
     }
+
+    class FinancialData {
+        private final SimpleStringProperty category;
+        private final SimpleDoubleProperty amount;
+
+        public FinancialData(String category, double amount) {
+            this.category = new SimpleStringProperty(category);
+            this.amount = new SimpleDoubleProperty(amount);
+        }
+
+        public String getCategory() {
+            return category.get();
+        }
+
+        public void setCategory(String category) {
+            this.category.set(category);
+        }
+
+        public SimpleStringProperty categoryProperty() {
+            return category;
+        }
+
+        public double getAmount() {
+            return amount.get();
+        }
+
+        public void setAmount(double amount) {
+            this.amount.set(amount);
+        }
+
+        public SimpleDoubleProperty amountProperty() {
+            return amount;
+        }
+    }
+
 }
 
 
