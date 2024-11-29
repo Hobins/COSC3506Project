@@ -2,6 +2,7 @@ package com.example.cosc3506project.screens;
 
 import com.example.cosc3506project.servlets.ServiceHistoryServlet;
 import com.example.cosc3506project.servlets.ServiceStatusServlet;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -9,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,18 +21,27 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class ServiceRequestForm  {
+public class UserPage {
 
-    private ProjectManagementSystem.User currentUser;
+    private AdminPage.User currentUser;
 
     BorderPane root = new BorderPane();  // Root layout for the screen
     VBox leftPanel = new VBox(10);  // The left panel menu
 
-    public ServiceRequestForm() {
-        this.currentUser = new ProjectManagementSystem.User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca");
+    /**
+     * Constructor for the UserPage
+     * This will call the setupLeftPanel method to setup the left panel
+     * and forces the user to be hardcoded
+     */
+    public UserPage() {
+        this.currentUser = new AdminPage.User("2000589", "John", "432-876-7869", "Active", "john@gmail.ca");
         setupLeftPanel();
     }
 
+    /**
+     * This sets-ups the left panel for the whole contactor menu
+     *
+     */
     private void setupLeftPanel(){
         // Left panel (User & Main sections)
         leftPanel.setPadding(new Insets(10));
@@ -83,14 +94,20 @@ public class ServiceRequestForm  {
         });
     }
 
-
+    /**
+     * This is called when the user is logged in and confirmed to be a user
+     *
+     */
     public BorderPane getUserScreen(){
         root.setLeft(leftPanel);
 
         return root;
     }
 
-
+    /**
+     * This displays the payment history screen and allows the user see all the payments they sent.
+     *
+     */
     private void showPaymentHistoryScreen() {
 
         VBox managePaymentsPanel = new VBox(10);
@@ -144,11 +161,13 @@ public class ServiceRequestForm  {
 
         managePaymentsPanel.getChildren().addAll(managePaymentsTitle, table);
 
-        // Add components to the root layout
-
         root.setCenter(managePaymentsPanel);
     }
 
+    /**
+     * This displays the profile screen and allows the user to edit themselves while logged in.
+     *
+     */
     private void showEditProfilesScreen() {
         AtomicReference<String> age = new AtomicReference<>("0");
         AtomicReference<String> location = new AtomicReference<>("N/A");
@@ -173,17 +192,6 @@ public class ServiceRequestForm  {
         TextField emailField = new TextField();
         emailField.setPromptText("Enter new email");
 
-        Label ageLabel = new Label("Age: " + age);
-        TextField ageField = new TextField();
-        ageField.setPromptText("Enter new age");
-        HBox ageBox = new HBox(10);
-        editProfilesPanel.getChildren().add(ageBox);
-
-        Label locationLabel = new Label("Location: " + location);
-        TextField locationField = new TextField();
-        locationField.setPromptText("Enter new location");
-        HBox locationBox = new HBox(10);
-        editProfilesPanel.getChildren().add(locationBox);
 
         Button saveButton = new Button("Save");
         try{
@@ -191,8 +199,6 @@ public class ServiceRequestForm  {
                 String newUsername = usernameField.getText();
                 String newPhone = phoneField.getText();
                 String newEmail = emailField.getText();
-                String newAge = ageField.getText();
-                String newLocation = locationField.getText();
 
                 if (!newUsername.isEmpty()) {
                     currentUser.setAccount(newUsername);
@@ -203,29 +209,24 @@ public class ServiceRequestForm  {
                 if (!newEmail.isEmpty()) {
                     currentUser.setEmail(newEmail);
                 }
-                if (!newAge.isEmpty()) {
-                    age.set(newAge);
-                }
-                if (!newLocation.isEmpty()) {
-                    location.set(newLocation);
-                }
 
                 usernameLabel.setText("Username: " + currentUser.getAccount());
                 phoneLabel.setText("Phone Number: " + currentUser.getContact());
                 emailLabel.setText("Email: " + currentUser.getEmail());
-//                ageLabel.setText("Age: " + age);
-//                locationLabel.setText("Location: " + location);
             });
         }
         catch(Exception e){
             System.out.println("Error: " + e);
         }
 
-        editProfilesPanel.getChildren().addAll(usernameLabel, usernameField, phoneLabel, phoneField, emailLabel, emailField, ageLabel, ageField, locationLabel, locationField, saveButton);
+        editProfilesPanel.getChildren().addAll(usernameLabel, usernameField, phoneLabel, phoneField, emailLabel, emailField,  saveButton);
 
         root.setCenter(editProfilesPanel);
     }
-
+    /**
+     * This allows the user to request a new service.
+     *
+     */
     private void showNewServiceScreen() {
         // Center panel (Form)
         VBox formPanel = new VBox(10);
@@ -262,7 +263,6 @@ public class ServiceRequestForm  {
         formGrid.add(descriptionLabel, 0, 3);
         formGrid.add(descriptionField, 1, 3);
 
-        // Buttons
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
@@ -271,7 +271,6 @@ public class ServiceRequestForm  {
 
         buttonBox.getChildren().addAll(submitButton, clearButton);
 
-        // Add action to buttons
         submitButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Submission Successful");
@@ -294,6 +293,11 @@ public class ServiceRequestForm  {
 
     }
 
+    /**
+     * This displays the service status screen and shows the status of the services.
+     * the data is pulled from the ServiceStatusServlet.
+     *
+     */
     private void showServiceStatusScreen() {
         VBox serviceStatusPanel = new VBox(10);
         serviceStatusPanel.setPadding(new Insets(20));
@@ -319,6 +323,12 @@ public class ServiceRequestForm  {
         root.setCenter(serviceStatusPanel);
     }
 
+    /**
+     * This method gets the data from the ServiceStatusServlet
+     * and returns it as an ObservableList of the data.
+     *
+     * @return ObservableList of the data from the ServiceStatusServlet
+     */
     private ObservableList<ServiceStatusServlet.Services> getDataFromServiceStatusServlet() {
         ObservableList<ServiceStatusServlet.Services> data = FXCollections.observableArrayList();
 
@@ -363,6 +373,11 @@ public class ServiceRequestForm  {
         return data;
     }
 
+    /**
+     * This method shows the service history screen and displays the service history.
+     * The data is pulled from the ServiceHistoryServlet.
+     *
+     */
     private void showServiceHistoryScreen() {
         VBox serviceHistoryPanel = new VBox(10);
         serviceHistoryPanel.setPadding(new Insets(20));
@@ -394,6 +409,12 @@ public class ServiceRequestForm  {
         root.setCenter(serviceHistoryPanel);
     }
 
+    /**
+     * This method gets the data from the ServiceHistoryServlet
+     * and returns it as an ObservableList of the data.
+     *
+     * @return ObservableList of the data from the ServiceHistoryServlet
+     */
     private ObservableList<ServiceHistoryServlet.Services> getDataFromServiceHistoryServlet() {
         ObservableList<ServiceHistoryServlet.Services> data = FXCollections.observableArrayList();
 
@@ -439,9 +460,6 @@ public class ServiceRequestForm  {
 
         return data;
     }
-
-
-
 
     // Payment class
     public static class Payment {

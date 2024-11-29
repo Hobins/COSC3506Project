@@ -1,10 +1,8 @@
 package com.example.cosc3506project.screens;
 
-//import com.example.cosc3506project.MainScreen;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,15 +10,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import java.io.*;
 
-public class ProjectManagementSystem {
+public class AdminPage {
 
     BorderPane root = new BorderPane();  // Root layout for the screen
     VBox leftPanel = new VBox(10);  // The left panel menu
 
     protected static final String FILE_PATH = "user_data.csv";
 
-    ObservableList<ProjectManagementSystem.User> data = FXCollections.observableArrayList();
+    ObservableList<AdminPage.User> data = FXCollections.observableArrayList();
 
+    /**
+     * This imports the data from a csv file
+     */
     protected void importData() {
         File file = new File(FILE_PATH);
 
@@ -36,7 +37,7 @@ public class ProjectManagementSystem {
                         String status = details[3].trim();
                         String email = details[4].trim();
 
-                        data.add(new ProjectManagementSystem.User(id, name, contact, status, email));
+                        data.add(new AdminPage.User(id, name, contact, status, email));
 
                     }
                 }
@@ -46,7 +47,10 @@ public class ProjectManagementSystem {
         }
     }
 
-
+    /**
+     * This saves the data to the csv file.
+     *
+     */
     private void saveData() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (User user : data) {
@@ -60,8 +64,10 @@ public class ProjectManagementSystem {
     };
 
 
-    // Constructor to initialize the left panel
-    public ProjectManagementSystem() {
+    /**
+     * Constructor for the ProjectManagementSystem
+     */
+    public AdminPage() {
         setupLeftPanel();
         importData();   //imports user data to user table
     }

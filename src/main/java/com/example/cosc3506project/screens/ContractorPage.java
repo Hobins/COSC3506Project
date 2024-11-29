@@ -2,7 +2,7 @@ package com.example.cosc3506project.screens;
 
 
 import com.example.cosc3506project.servlets.ActiveProjectServlet;
-import com.example.cosc3506project.servlets.ServiceHistoryServlet;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -13,32 +13,35 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ContractorPage {
 
-    private ProjectManagementSystem.User currentUser;
+    private AdminPage.User currentUser;
 
 
-    BorderPane root = new BorderPane();  // Root layout for the screen
-    VBox leftPanel = new VBox(10);  // The left panel menu
+    BorderPane root = new BorderPane();
+
+    VBox leftPanel = new VBox(10);
 
 
 
     /**
      * Constructor for the ContractorPage
-     * This will keep the left panel static
+     * This will call the setupLeftPanel method to set up the left panel
      * and forces the user to be hardcoded
      *
      */
     public ContractorPage() {
-        this.currentUser = new ProjectManagementSystem.User("2350529", "Ryan", "705-382-3941", "Active", "ryan123@gmail.ca");
+        this.currentUser = new AdminPage.User("2350529", "Ryan", "705-382-3941", "Active", "ryan123@gmail.ca");
         setupLeftPanel();
     }
 
@@ -47,7 +50,6 @@ public class ContractorPage {
      *
      */
     private void setupLeftPanel() {
-        // Left panel (Admin menu)
         leftPanel.setPadding(new Insets(10));
         leftPanel.setPrefWidth(200);
         leftPanel.setStyle("-fx-border-color: #ccc; -fx-border-width: 1px;");
@@ -77,7 +79,6 @@ public class ContractorPage {
                 }
             }
         });
-
         leftPanel.getChildren().addAll(contractorLabel, contractorMenu);
     }
 
@@ -87,7 +88,6 @@ public class ContractorPage {
      */
     public BorderPane getContractorScreen() {
         root.setLeft(leftPanel);
-
 
         return root;
     }
@@ -116,18 +116,6 @@ public class ContractorPage {
         Label emailLabel = new Label("Email: " + currentUser.getEmail());
         TextField emailField = new TextField();
         emailField.setPromptText("Enter new email");
-//
-//        Label ageLabel = new Label("Age: " + age);
-//        TextField ageField = new TextField();
-//        ageField.setPromptText("Enter new age");
-//        HBox ageBox = new HBox(10);
-//        editProfilesPanel.getChildren().add(ageBox);
-
-//        Label locationLabel = new Label("Location: " + location);
-//        TextField locationField = new TextField();
-//        locationField.setPromptText("Enter new location");
-//        HBox locationBox = new HBox(10);
-//        editProfilesPanel.getChildren().add(locationBox);
 
         Button saveButton = new Button("Save");
         try{
@@ -135,9 +123,6 @@ public class ContractorPage {
                 String newUsername = usernameField.getText();
                 String newPhone = phoneField.getText();
                 String newEmail = emailField.getText();
-//                String newAge = ageField.getText();
-//                String newLocation = locationField.getText();
-
                 if (!newUsername.isEmpty()) {
                     currentUser.setAccount(newUsername);
                 }
@@ -147,18 +132,10 @@ public class ContractorPage {
                 if (!newEmail.isEmpty()) {
                     currentUser.setEmail(newEmail);
                 }
-//                if (!newAge.isEmpty()) {
-//                    age.set(newAge);
-//                }
-//                if (!newLocation.isEmpty()) {
-//                    location.set(newLocation);
-//                }
 
                 usernameLabel.setText("Username: " + currentUser.getAccount());
                 phoneLabel.setText("Phone Number: " + currentUser.getContact());
                 emailLabel.setText("Email: " + currentUser.getEmail());
-//                ageLabel.setText("Age: " + age);
-//                locationLabel.setText("Location: " + location);
             });
         }
         catch(Exception e){
@@ -201,7 +178,6 @@ public class ContractorPage {
         invoiceForm.add(dateLabel, 0, 2);
         invoiceForm.add(datePicker, 1, 2);
 
-        // Itemized Table
         VBox itemizedTable = new VBox(10);
         itemizedTable.setStyle("-fx-border-color: lightgray; -fx-border-width: 1px; -fx-padding: 10px;");
 
@@ -216,7 +192,7 @@ public class ContractorPage {
                 {"Tax", "$10.00"},
                 {"Total", "$50.00"}
         };
-
+        // Add items to the grid via a loop
         for (int i = 0; i < items.length; i++) {
             Label item = new Label(items[i][0]);
             Label price = new Label(items[i][1]);
@@ -227,7 +203,7 @@ public class ContractorPage {
 
         itemizedTable.getChildren().addAll(tableTitle, itemGrid);
 
-        // Action Buttons
+        // Adds the submit and clear buttons
         HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         Button payNowButton = new Button("Submit");
@@ -246,20 +222,18 @@ public class ContractorPage {
             alert.setContentText("Your invoice has been submitted successfully. You will receive a confirmation email shortly.");
             alert.showAndWait();
         });
-
-
-
-
     }
 
+    /**
+     * This allows the contractor to view all the projects they are currently working on
+     * and allow them to mark them completed.
+     */
     private void showEditScreen() {
         VBox editScreenPanel = new VBox(10);
         editScreenPanel.setPadding(new Insets(20));
         Label editTitle = new Label("Edit Projects");
         editTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         editScreenPanel.getChildren().add(editTitle);
-
-        ActiveProjectServlet.Services services = null;
 
         TableView<ActiveProjectServlet.Services> editProjectsTable = new TableView<>();
 
@@ -374,7 +348,7 @@ public class ContractorPage {
                     responseBuilder.append(line);
                 }
 
-                // Parse the JSON array from the response
+                // Parse the JSON response from the active project servlet
                 JSONArray jsonArray = new JSONArray(responseBuilder.toString());
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -385,7 +359,7 @@ public class ContractorPage {
                     String description = jsonObject.getString("description");
                     String status = jsonObject.getString("status");
 
-                    // Add the parsed object to the data list
+                    // Add the parsed object to the data list to be displayed in the table
                     data.add(new ActiveProjectServlet.Services(serviceType, date, description, status));
                 }
             }

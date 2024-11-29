@@ -1,7 +1,6 @@
 package com.example.cosc3506project.servlets;
 
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
@@ -14,8 +13,15 @@ public class LoginServlet extends HttpServlet{
     private static final String CONTRACTOR_USER = "contractor";
     private static final String CONTRACTOR_PASS = "123";
 
+    /**
+     * Handles the HTTP POST method for the login
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws IOException if an I/O error occurs
+     */
     @Override
-    protected  void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected  void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("Login attempt for user: " + request.getParameter("username")); // Log username
         String username = request.getParameter("username");
         String password = request.getParameter("password");
