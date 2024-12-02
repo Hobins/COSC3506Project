@@ -87,7 +87,7 @@ public class AdminPage {
 
         Label adminLabel = new Label("Administrator");
         ListView<String> adminMenu = new ListView<>();
-        adminMenu.getItems().addAll("Dashboard", "Manage Users", "User Roles", "Assign Permissions", "Financials");
+        adminMenu.getItems().addAll("Manage Users", "Assign Permissions", "Financials");
 
         adminMenu.setOnMouseClicked(e -> {
             String selectedItem = adminMenu.getSelectionModel().getSelectedItem();
